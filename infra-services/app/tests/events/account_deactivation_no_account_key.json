@@ -1,0 +1,21 @@
+{
+  "version": "0",
+  "id": "4f160332-e5ae-4066-b8e3-778399621307",
+  "detail-type": "accountDeactivationCompleted/v1",
+  "source": "cloudessence.internal",
+  "account": "123456789012",
+  "time": "2022-01-17T08:39:14Z",
+  "region": "us-east-1",
+  "resources": [],
+  "detail": {
+    "orgId": "24f0dcbd-f031-42e8-b00b-6d79b5065e2c",
+    "account": {
+      "accountId": "469491241355",
+      "provider": "aws",
+      "name": "469491241355",
+      "active": true,
+      "agentRegion": "us-east-1"
+    },
+    "taskId": "1642408692_Onboarding_e65918aa"
+  }
+}
