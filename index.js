@@ -1,0 +1,1 @@
+import { LambdaFunction } from './home'
