@@ -142,7 +142,7 @@ jobs:
             try {
               console.log("Running gitstream-rules-engine v.misha");
               const rulesEngine = new RulesEngine();
-              rulesEngine.run();
+              await rulesEngine.run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
               process.exit(1);
