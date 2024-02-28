@@ -4,4 +4,4 @@ A new repository created for exploring and experimenting with the GitStream work
 
 https://app.gitstream.cm/playground
 
-test pure action 5
+test pure action 6
