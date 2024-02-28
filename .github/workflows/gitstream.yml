@@ -55,7 +55,7 @@ jobs:
         with:
           repository: ${{ github.event.inputs.full_repository }}
           ref: ${{ github.event.inputs.base_ref }}
-      #   path: 'gitstream/repo/'
+          path: 'gitstream/repo/'
           token: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).githubToken || github.token }}
 
       - name: Escape single quotes
@@ -112,7 +112,7 @@ jobs:
         with:
           repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/gitsream-playground'
           ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
-          path: 'gitstream/cm/'
+        #   path: 'gitstream/cm/'
 
       - name: os setup
         run: |
@@ -125,8 +125,7 @@ jobs:
           ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
 
       - name: Run Action
-        run: |
-          npm ci
+        run: npm ci
 
       - name: Run RulesEngine
         uses: actions/github-script@v6
