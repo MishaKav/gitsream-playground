@@ -138,7 +138,7 @@ jobs:
           DEBUG_MODE: ${{ github.event.inputs.debug_mode }}
         with:
           script: |
-            import { RulesEngine } from "@linearb/gitstream-core";
+            const { RulesEngine } = require("@linearb/gitstream-core");
             try {
               console.log("Running gitstream-rules-engine v.misha");
               const rulesEngine = new RulesEngine();
