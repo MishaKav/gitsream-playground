@@ -55,7 +55,7 @@ jobs:
         with:
           repository: ${{ github.event.inputs.full_repository }}
           ref: ${{ github.event.inputs.base_ref }}
-          path: 'gitstream/repo/'
+      #   path: 'gitstream/repo/'
           token: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).githubToken || github.token }}
 
       - name: Escape single quotes
