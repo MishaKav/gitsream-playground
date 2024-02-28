@@ -138,7 +138,8 @@ jobs:
           DEBUG_MODE: true
         with:
           script: |
-            console.log(JSON.stringify(process.env.CLIENT_PAYLOAD))
+            const p = JSON.parse(process.env.CLIENT_PAYLOAD)
+            console.log(p.repoPath)
             const { RulesEngine } = require("@linearb/gitstream-core");
             try {
               console.log("Running gitstream-rules-engine v.misha");
