@@ -110,7 +110,7 @@ jobs:
         uses: actions/checkout@v3
         # if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
         with:
-          repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepo }}'
+          repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/gitsream-playground'
           ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
           path: 'gitstream/cm/'
 
