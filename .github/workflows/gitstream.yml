@@ -135,7 +135,7 @@ jobs:
           CLIENT_PAYLOAD: ${{ steps.safe-strings.outputs.client_payload }}
           RULES_RESOLVER_URL: ${{ github.event.inputs.resolver_url }}
           RULES_RESOLVER_TOKEN: ${{ github.event.inputs.resolver_token }}
-          DEBUG_MODE: false
+          DEBUG_MODE: true
         with:
           script: |
             const { RulesEngine } = require("@linearb/gitstream-core");
