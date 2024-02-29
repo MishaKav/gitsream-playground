@@ -122,11 +122,6 @@ jobs:
           NPMRC: '.npmrc'
           ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
 
-      - name: Run Git Commands
-        run: |
-          git git-lfs
-          git lfs install
-
       - name: Run Action
         run: npm ci
 
@@ -142,7 +137,7 @@ jobs:
         with:
           script: |
             const p = JSON.parse(process.env.CLIENT_PAYLOAD)
-            console.log(p.repoPath)
+            console.log(JSON.stringify(p))
             const { RulesEngine } = require("@linearb/gitstream-core");
             try {
               console.log("Running gitstream-rules-engine v.misha");
