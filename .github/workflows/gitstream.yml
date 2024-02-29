@@ -106,20 +106,20 @@ jobs:
           cd gitstream
           mkdir cm
 
-      # - name: Checkout cm repo
-      #   uses: actions/checkout@v3
-      #   if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
-      #   with:
-      #     repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/gitsream-playground'
-      #     ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
-      #     path: 'gitstream/cm/'
+      - name: Checkout cm repo
+        uses: actions/checkout@v3
+        # if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
+        with:
+          repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/gitsream-playground'
+          ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
+      #  path: 'gitstream/cm/'
 
       - name: os setup
         run: |
           curl -H "X-JFrog-Art-API: ${{ secrets.ARTIFACTORY_API_KEY }}" https://linearb.jfrog.io/linearb/api/npm/npm-local/auth/linearb >> .npmrc
 
       - name: Run Action
-        run: npm i
+        run: npm ci
 
       - name: Run RulesEngine
         uses: actions/github-script@v7
