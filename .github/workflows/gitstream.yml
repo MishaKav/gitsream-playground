@@ -106,13 +106,13 @@ jobs:
           cd gitstream
           mkdir cm
 
-      - name: Checkout cm repo
-        uses: actions/checkout@v3
-        # if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
-        with:
-          repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/gitsream-playground'
-          ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
-        #   path: 'gitstream/cm/'
+      # - name: Checkout cm repo
+      #   uses: actions/checkout@v3
+      #   if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
+      #   with:
+      #     repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/gitsream-playground'
+      #     ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
+      #     path: 'gitstream/cm/'
 
       - name: os setup
         run: |
@@ -121,6 +121,11 @@ jobs:
         env:
           NPMRC: '.npmrc'
           ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
+
+      - name: Run Git Commands
+        run: |
+          git git-lfs
+          git lfs install
 
       - name: Run Action
         run: npm ci
