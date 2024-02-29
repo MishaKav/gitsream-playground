@@ -132,7 +132,7 @@ jobs:
           DEBUG_MODE: true
         with:
           script: |
-            const p = JSON.parse(process.env.CLIENT_PAYLOAD)
+            const p = JSON.parse(JSON.parse(process.env.CLIENT_PAYLOAD))
             console.log('misha')
             console.log(p.analytics_url)
             const { RulesEngine } = require("@linearb/gitstream-core");
