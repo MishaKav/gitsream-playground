@@ -116,14 +116,10 @@ jobs:
 
       - name: os setup
         run: |
-          touch $NPMRC
-          curl -H "X-JFrog-Art-API: $ARTIFACTORY_API_KEY" https://linearb.jfrog.io/linearb/api/npm/npm-local/auth/linearb >> $NPMRC
-        env:
-          NPMRC: '.npmrc'
-          ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
+          curl -H "X-JFrog-Art-API: ${{ secrets.ARTIFACTORY_API_KEY }}" https://linearb.jfrog.io/linearb/api/npm/npm-local/auth/linearb >> .npmrc
 
       - name: Run Action
-        run: npm ci
+        run: npm i
 
       - name: Run RulesEngine
         uses: actions/github-script@v7
