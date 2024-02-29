@@ -135,6 +135,7 @@ jobs:
             const p = JSON.parse(JSON.parse(process.env.CLIENT_PAYLOAD))
             console.log('misha')
             console.log(p.analytics_url)
+            process.env.CLIENT_PAYLOAD = JSON.parse(process.env.CLIENT_PAYLOAD);
             const { RulesEngine } = require("@linearb/gitstream-core");
             try {
               console.log("Running gitstream-rules-engine v.misha");
