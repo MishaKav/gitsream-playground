@@ -56,7 +56,7 @@ jobs:
         with:
           repository: ${{ github.event.inputs.full_repository }}
           ref: ${{ github.event.inputs.base_ref }}
-          path: 'gitstream/repo/'
+          path: 'gitstream/code/'
           token: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).githubToken || github.token }}
 
       - name: Escape single quotes
@@ -93,25 +93,25 @@ jobs:
         run: |
           all=2147483647
           cd gitstream
-          cd repo
+          cd code
           git fetch --deepen=$all origin $'${{ steps.safe-strings.outputs.base_ref }}'
           git remote add upstream $'${{ steps.safe-strings.outputs.url }}'
           git fetch --deepen=$all upstream $'${{ steps.safe-strings.outputs.head_ref }}'
           git checkout -b $'upstream/${{ steps.safe-strings.outputs.head_ref}}' $'upstream/${{ steps.safe-strings.outputs.head_ref}}'
         shell: bash
 
-      - name: Copy to Code
-        run: |
-          echo pwd
-          pwd
-          echo ls
-          ls
-          cp -r ./gitstream/ ./code/
-          cd code
-          echo pwd
-          pwd
-          echo ls
-          ls
+      # - name: Copy to Code
+      #   run: |
+      #     echo pwd
+      #     pwd
+      #     echo ls
+      #     ls
+      #     cp -r ./gitstream/ ./code/
+      #     cd code
+      #     echo pwd
+      #     pwd
+      #     echo ls
+      #     ls
 
       # - name: Create cm folder
       #   id: create-cm-folder
