@@ -99,6 +99,10 @@ jobs:
           git fetch --deepen=$all upstream $'${{ steps.safe-strings.outputs.head_ref }}'
           git checkout -b $'upstream/${{ steps.safe-strings.outputs.head_ref}}' $'upstream/${{ steps.safe-strings.outputs.head_ref}}'
           cd ..
+          echo pwd
+          pwd
+          echo ls
+          ls
           cp -r ./repo ./code
         shell: bash
 
