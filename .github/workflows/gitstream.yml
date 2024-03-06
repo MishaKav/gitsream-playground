@@ -97,7 +97,11 @@ jobs:
           git remote add upstream $'${{ steps.safe-strings.outputs.url }}'
           git fetch --deepen=$all upstream $'${{ steps.safe-strings.outputs.head_ref }}'
           git checkout -b $'upstream/${{ steps.safe-strings.outputs.head_ref}}' $'upstream/${{ steps.safe-strings.outputs.head_ref}}'
-          cd ../..
+          pwd
+          ls
+          cd ..
+          pwd
+          ls
           cp -r ./repo ./code
         shell: bash
 
