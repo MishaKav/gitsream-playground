@@ -102,7 +102,16 @@ jobs:
 
       - name: Copy to Code
         run: |
-          cp -r ./gitstream/ ./code
+          echo pwd
+          pwd
+          echo ls
+          ls
+          cp -r ./gitstream/ ./code/
+          cd code
+          echo pwd
+          pwd
+          echo ls
+          ls
 
       # - name: Create cm folder
       #   id: create-cm-folder
