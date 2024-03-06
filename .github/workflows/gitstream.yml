@@ -49,6 +49,7 @@ jobs:
           mkdir gitstream
           cd gitstream
           mkdir repo
+          mkdir code
 
       - name: Checkout base branch
         uses: actions/checkout@v3
@@ -98,23 +99,23 @@ jobs:
           git fetch --deepen=$all upstream $'${{ steps.safe-strings.outputs.head_ref }}'
           git checkout -b $'upstream/${{ steps.safe-strings.outputs.head_ref}}' $'upstream/${{ steps.safe-strings.outputs.head_ref}}'
           cd ..
-          cp -r ./repo ../../code
+          cp -r ./repo ./code
         shell: bash
 
-      - name: Create cm folder
-        id: create-cm-folder
-        shell: bash
-        run: |
-          cd gitstream
-          mkdir cm
+      # - name: Create cm folder
+      #   id: create-cm-folder
+      #   shell: bash
+      #   run: |
+      #     cd gitstream
+      #     mkdir cm
 
-      - name: Checkout cm repo
-        uses: actions/checkout@v3
-        # if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
-        with:
-          repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/gitsream-playground'
-          ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
-      #  path: 'gitstream/cm/'
+      # - name: Checkout cm repo
+      #   uses: actions/checkout@v3
+      #   if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
+      #   with:
+      #     repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/gitsream-playground'
+      #     ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
+      #     path: 'gitstream/cm/'
 
       - name: os setup
         run: |
