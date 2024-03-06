@@ -41,6 +41,8 @@ jobs:
     runs-on: ubuntu-latest
     name: gitStream workflow automation
     steps:
+      - uses: actions/checkout@v3
+
       - name: Create GitStream folder
         id: create-gitstream-folder
         shell: bash
@@ -49,18 +51,19 @@ jobs:
           mkdir gitstream
           cd gitstream
           mkdir repo
+          mkdir code
 
       - name: Checkout base branch
         uses: actions/checkout@v3
         with:
           repository: ${{ github.event.inputs.full_repository }}
           ref: ${{ github.event.inputs.base_ref }}
-          path: 'gitstream/repo/'
+          path: 'gitstream/code/'
           token: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).githubToken || github.token }}
 
       - name: Escape single quotes
         id: safe-strings
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           BASE_REF_ARG: ${{ github.event.inputs.base_ref }}
           HEAD_REF_ARG: ${{ github.event.inputs.head_ref }}
@@ -92,58 +95,64 @@ jobs:
         run: |
           all=2147483647
           cd gitstream
-          cd repo
+          cd code
           git fetch --deepen=$all origin $'${{ steps.safe-strings.outputs.base_ref }}'
           git remote add upstream $'${{ steps.safe-strings.outputs.url }}'
           git fetch --deepen=$all upstream $'${{ steps.safe-strings.outputs.head_ref }}'
           git checkout -b $'upstream/${{ steps.safe-strings.outputs.head_ref}}' $'upstream/${{ steps.safe-strings.outputs.head_ref}}'
         shell: bash
 
-      - name: Create cm folder
-        id: create-cm-folder
-        shell: bash
-        run: |
-          cd gitstream
-          mkdir cm
+      # - name: Copy to Code
+      #   run: |
+      #     echo pwd
+      #     pwd
+      #     echo ls
+      #     ls
+      #     cp -r ./gitstream/ ./code/
+      #     cd code
+      #     echo pwd
+      #     pwd
+      #     echo ls
+      #     ls
 
-      - name: Checkout cm repo
-        uses: actions/checkout@v3
-        # if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
-        with:
-          repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepo }}'
-          ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
-          path: 'gitstream/cm/'
+      # - name: Create cm folder
+      #   id: create-cm-folder
+      #   shell: bash
+      #   run: |
+      #     cd gitstream
+      #     mkdir cm
+
+      # - name: Checkout cm repo
+      #   uses: actions/checkout@v3
+      #   if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
+      #   with:
+      #     repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/gitsream-playground'
+      #     ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
+      #     path: 'gitstream/cm/'
 
       - name: os setup
         run: |
-          sudo apt update -y
-          sudo apt install curl
-          touch $NPMRC
-          curl -H "X-JFrog-Art-API: $ARTIFACTORY_API_KEY" https://linearb.jfrog.io/linearb/api/npm/npm-local/auth/linearb >> $NPMRC
-        env:
-          NPMRC: '.npmrc'
-          ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
+          curl -H "X-JFrog-Art-API: ${{ secrets.ARTIFACTORY_API_KEY }}" https://linearb.jfrog.io/linearb/api/npm/npm-local/auth/linearb >> .npmrc
 
       - name: Run Action
-        run: |
-          npm ci
+        run: npm ci
 
       - name: Run RulesEngine
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           HEAD_REF: 'upstream/${{ steps.safe-strings.outputs.head_ref }}'
           BASE_REF: '${{ steps.safe-strings.outputs.base_ref }}'
-          CLIENT_PAYLOAD: ${{ steps.safe-strings.outputs.client_payload }} 
+          CLIENT_PAYLOAD: ${{ steps.safe-strings.outputs.client_payload }}
           RULES_RESOLVER_URL: ${{ github.event.inputs.resolver_url }}
           RULES_RESOLVER_TOKEN: ${{ github.event.inputs.resolver_token }}
-          DEBUG_MODE: ${{ github.event.inputs.debug_mode }}
+          DEBUG_MODE: true
         with:
           script: |
-            import { RulesEngine } from "@linearb/gitstream-core";
+            const { RulesEngine } = require("@linearb/gitstream-core");
             try {
               console.log("Running gitstream-rules-engine v.misha");
               const rulesEngine = new RulesEngine();
-              rulesEngine.run();
+              await rulesEngine.run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
               process.exit(1);
