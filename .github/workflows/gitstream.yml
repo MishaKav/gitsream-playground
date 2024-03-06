@@ -103,7 +103,7 @@ jobs:
           pwd
           echo ls
           ls
-          cp -r ./repo ./code
+          cp -r ./repo/ ./code
         shell: bash
 
       # - name: Create cm folder
