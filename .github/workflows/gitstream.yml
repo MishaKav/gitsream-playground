@@ -98,14 +98,11 @@ jobs:
           git remote add upstream $'${{ steps.safe-strings.outputs.url }}'
           git fetch --deepen=$all upstream $'${{ steps.safe-strings.outputs.head_ref }}'
           git checkout -b $'upstream/${{ steps.safe-strings.outputs.head_ref}}' $'upstream/${{ steps.safe-strings.outputs.head_ref}}'
-          cd ..
-          cp -r ./repo/ ./code
-          cd code
-          echo pwd
-          pwd
-          echo ls
-          ls
         shell: bash
+
+      - name: Copy to Code
+        run: |
+          cp -r ./gitstream/ ./code
 
       # - name: Create cm folder
       #   id: create-cm-folder
