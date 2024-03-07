@@ -1,6 +1,6 @@
 # GitStream Playground:
 
-test logs 1
+test logs 2
 
 A new repository created for exploring and experimenting with the GitStream workflow.
 
