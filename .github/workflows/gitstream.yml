@@ -141,9 +141,10 @@ jobs:
           script: |
             const { executeGitCommand } = require('@linearb/gitstream-core/src/rule-engine/utils/git.service');
             const { RulesEngine } = require('@linearb/gitstream-core');
+            const { execSync } = require('child_process');
 
             try {
-              executeGitCommand('cd code', '.')
+              execSync('cd code')
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
