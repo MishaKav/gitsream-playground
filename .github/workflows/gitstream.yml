@@ -143,7 +143,10 @@ jobs:
             const { execSync } = require('child_process');
 
             try {
+              execSync('pwd')
               execSync('cd code')
+              execSync('pwd')
+              execSync('ll')
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
