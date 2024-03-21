@@ -139,9 +139,11 @@ jobs:
           DEBUG_MODE: true
         with:
           script: |
+            const { executeGitCommand } require('@linearb/gitstream-core/src/rule-engine/utils/git.service');
             const { RulesEngine } = require('@linearb/gitstream-core');
 
             try {
+              executeGitCommand('cd code', '.')
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
