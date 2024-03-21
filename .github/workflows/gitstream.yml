@@ -128,11 +128,9 @@ jobs:
           DEBUG_MODE: false
         with:
           script: |
-            import { RulesEngine } from '@linearb/gitstream-core';
-            import core from '@linearb/gitstream-core/package.json' assert { type: 'json' };
+            const { RulesEngine } = require('@linearb/gitstream-core');
 
             try {
-              console.log(`Running gitstream-rules-engine ${core.version}`);
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
