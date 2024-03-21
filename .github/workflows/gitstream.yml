@@ -139,7 +139,6 @@ jobs:
           DEBUG_MODE: true
         with:
           script: |
-            const { executeGitCommand } = require('@linearb/gitstream-core/src/rule-engine/utils/git.service');
             const { RulesEngine } = require('@linearb/gitstream-core');
             const { execSync } = require('child_process');
 
