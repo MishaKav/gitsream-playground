@@ -36,6 +36,8 @@ jobs:
     runs-on: ubuntu-latest
     name: gitStream workflow automation
     steps:
+      - uses: actions/checkout@v4
+
       - name: Create GitStream folder
         run: |
           rm -rf gitstream
@@ -113,7 +115,7 @@ jobs:
           curl -H "X-JFrog-Art-API: ${{ secrets.ARTIFACTORY_API_KEY }}" https://linearb.jfrog.io/linearb/api/npm/npm-local/auth/linearb >> .npmrc
 
       - name: Install gitstream-core
-        run: npm ci
+        run: npm i
 
       - name: Run RulesEngine
         uses: actions/github-script@v7
