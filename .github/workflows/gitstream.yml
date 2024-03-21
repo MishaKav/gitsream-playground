@@ -120,7 +120,7 @@ jobs:
       - name: Run RulesEngine
         uses: actions/github-script@v7
         env:
-          HEAD_REF: upstream/${{ steps.safe-strings.outputs.head_ref }}
+          HEAD_REF: ${{ steps.safe-strings.outputs.head_ref }}
           BASE_REF: ${{ steps.safe-strings.outputs.base_ref }}
           CLIENT_PAYLOAD: ${{ steps.safe-strings.outputs.client_payload }}
           RULES_RESOLVER_URL: ${{ github.event.inputs.resolver_url }}
