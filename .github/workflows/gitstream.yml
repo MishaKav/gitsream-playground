@@ -96,8 +96,8 @@ jobs:
           git remote add upstream $'${{ steps.safe-strings.outputs.url }}'
           git fetch --deepen=$all upstream $'${{ steps.safe-strings.outputs.head_ref }}'
           git checkout -b $'upstream/${{ steps.safe-strings.outputs.head_ref}}' $'upstream/${{ steps.safe-strings.outputs.head_ref}}'
-          git checkout main
-          git checkout ${{ steps.safe-strings.outputs.head_ref }}
+          git checkout $'${{ steps.safe-strings.outputs.base_ref }}'
+          git checkout $'${{ steps.safe-strings.outputs.head_ref }}'
 
       - name: Create cm folder
         run: |
@@ -145,12 +145,9 @@ jobs:
             const { execSync } = require('child_process');
 
             try {
-              let cmd = '';
-              execSync('cd code')
-              cmd = execSync('pwd').toString();
-              console.log(cmd);
-              cmd = execSync('ls').toString();
-              console.log(cmd);
+              execSync('cd code', { encoding: "utf8" })
+              execSync('pwd', { encoding: "utf8" });
+              execSync('ls', { encoding: "utf8" });
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
