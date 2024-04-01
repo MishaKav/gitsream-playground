@@ -150,7 +150,7 @@ jobs:
               execSync('pwd')
               execSync('cd code')
               execSync('pwd')
-              execSync('ll')
+              execSync('ls')
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
