@@ -139,14 +139,15 @@ jobs:
           DEBUG_MODE: true
         with:
           script: |
+            // just to align this line of code
             const { RulesEngine } = require('@linearb/gitstream-core');
             const { execSync } = require('child_process');
 
             try {
-              execSync('pwd')
-              execSync('cd code')
-              execSync('pwd')
-              execSync('ls')
+              execSync('pwd').toString();
+              execSync('cd code').toString();
+              execSync('pwd').toString();
+              execSync('ls').toString();
               // await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
