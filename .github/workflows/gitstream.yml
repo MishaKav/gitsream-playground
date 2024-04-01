@@ -147,7 +147,7 @@ jobs:
               execSync('cd code')
               execSync('pwd')
               execSync('ls')
-              await RulesEngine().run();
+              // await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
               process.exit(1);
