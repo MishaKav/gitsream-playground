@@ -4,4 +4,4 @@ A new repository created for exploring and experimenting with the GitStream work
 
 https://app.gitstream.cm/playground
 
-test node setup 5
+test node setup 6

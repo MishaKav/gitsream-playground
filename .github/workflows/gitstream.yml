@@ -123,6 +123,7 @@ jobs:
 
       - name: Run Code
         run: |
+          cd code
           cd repo && git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm'
 
       - name: Run RulesEngine
