@@ -127,6 +127,7 @@ jobs:
         run: |
           cd code
           cd repo && git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm' > diff.txt
+          echo mishaTryAddToGitStream >> diff.txt
           cat diff.txt
 
       - name: Run RulesEngine
