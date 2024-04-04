@@ -146,9 +146,9 @@ jobs:
             const { execSync } = require('child_process');
 
             try {
-              execSync('cd code', { encoding: "utf8" })
-              execSync('pwd', { encoding: "utf8" });
-              execSync('ls', { encoding: "utf8" });
+              // execSync('cd code', { encoding: "utf8" })
+              // execSync('pwd', { encoding: "utf8" });
+              // execSync('ls', { encoding: "utf8" });
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
