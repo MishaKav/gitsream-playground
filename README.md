@@ -4,4 +4,4 @@ A new repository created for exploring and experimenting with the GitStream work
 
 https://app.gitstream.cm/playground
 
-check new cache1
+check local cache implementation
