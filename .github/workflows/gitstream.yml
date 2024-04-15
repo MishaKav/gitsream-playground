@@ -123,10 +123,10 @@ jobs:
       - name: Install gitstream-core
         run: npm ci
 
-      - name: Run Code
-        run: |
-          cd code
-          cd repo && git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm' > diff.txt
+      # - name: Run Code
+      #   run: |
+      #     cd code
+      #     cd repo && git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm' > diff.txt
 
       - name: Run RulesEngine
         uses: actions/github-script@v7
@@ -141,13 +141,13 @@ jobs:
           script: |
             // just to align this line of code
             const { RulesEngine } = require('@linearb/gitstream-core');
-            const { executeGitCommand } = require('@linearb/gitstream-core/dist/rule-engine/utils/git.service');
+            // const { executeGitCommand } = require('@linearb/gitstream-core/dist/rule-engine/utils/git.service');
             const { execSync } = require('child_process');
 
             try {
-              executeGitCommand('pwd');
+              //executeGitCommand('pwd');
               console.log('misha');
-              executeGitCommand('ls');
+              //executeGitCommand('ls');
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
