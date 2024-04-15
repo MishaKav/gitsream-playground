@@ -9,7 +9,7 @@ config:
     - gitsream-playground
     
 automations:
-  # Add a label that indicates how many minutes it will take to review the PR.
+  # Test
   estimated_time_to_review:
     if:
       - true
