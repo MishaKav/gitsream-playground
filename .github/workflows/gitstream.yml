@@ -123,10 +123,11 @@ jobs:
       - name: Install gitstream-core
         run: npm ci
 
-      # - name: Run Code
-      #   run: |
-      #     cd code
-      #     cd repo && git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm' > diff.txt
+      - name: Run Code
+        run: |
+          cd code
+          cd repo && git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm' > diff.txt
+          cat diff.txt
 
       - name: Run RulesEngine
         uses: actions/github-script@v7
