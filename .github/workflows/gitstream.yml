@@ -146,6 +146,7 @@ jobs:
             const { execSync } = require('child_process');
 
             try {
+              execSync('cd code && cd repo && git status');
               //executeGitCommand('pwd');
               console.log('misha');
               //executeGitCommand('ls');
