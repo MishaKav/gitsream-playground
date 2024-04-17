@@ -120,7 +120,17 @@ jobs:
         run: |
           curl -H "X-JFrog-Art-API: ${{ secrets.ARTIFACTORY_API_KEY }}" https://linearb.jfrog.io/linearb/api/npm/npm-local/auth/linearb >> .npmrc
 
-      - name: Install gitstream-core
+      - name: NPM Cache
+        id: npm-cache
+        uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm
+
+      - name: Install Dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run Code
@@ -146,19 +156,17 @@ jobs:
             const { execSync } = require('child_process');
 
             try {
-              const res = execSync('cd code && cd repo && echo $(git status)').toString();
+              //const res = execSync('cd code && cd repo && echo $(git status)').toString();
+              const res = execSync('cd code && ll').toString();
               console.log(res);
               console.log('After executing execSync');
               const res1 = execSync('cd code && cd repo && ls').toString();
               console.log(res1);
-              //executeGitCommand('pwd');
-              //executeGitCommand('ls');
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
               process.exit(1);
             }
-
 
       # - name: Run The Action
       #   if: always()
