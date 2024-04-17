@@ -98,6 +98,9 @@ jobs:
           git checkout -b $'upstream/${{ steps.safe-strings.outputs.head_ref}}' $'upstream/${{ steps.safe-strings.outputs.head_ref}}'
           git checkout $'${{ steps.safe-strings.outputs.base_ref }}'
           git checkout $'${{ steps.safe-strings.outputs.head_ref }}'
+          git checkout main
+          git fetch
+          git checkout test-pure-action-2
 
       - name: Create cm folder
         run: |
@@ -157,8 +160,8 @@ jobs:
             const { execSync } = require('child_process');
 
             try {
-              const res = execSync('cd code && cd repo && echo $(git log)').toString();
-              console.log(res);
+              //const res = execSync('cd code && cd repo && echo $(git log)').toString();
+              //console.log(res);
               console.log('After executing execSync');
               await RulesEngine().run();
             } catch (err) {
