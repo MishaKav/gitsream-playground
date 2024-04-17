@@ -157,7 +157,7 @@ jobs:
             const { execSync } = require('child_process');
 
             try {
-              const res = execSync('cd code && cd repo && echo $(git status)').toString();
+              const res = execSync('cd code && cd repo && echo $(git log)').toString();
               console.log(res);
               console.log('After executing execSync');
               await RulesEngine().run();
