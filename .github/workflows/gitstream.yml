@@ -157,7 +157,7 @@ jobs:
 
             try {
               //const res = execSync('cd code && cd repo && echo $(git status)').toString();
-              const res = execSync('cd code && cd repo && ll').toString();
+              const res = execSync('cd code && cd repo && ls').toString();
               console.log(res);
               console.log('After executing execSync');
               const res1 = execSync('cd code && cd repo && ls').toString();
