@@ -161,8 +161,8 @@ jobs:
               const res = execSync('cd repo && ls').toString();
               console.log(res);
               console.log('After executing execSync');
-              const res1 = execSync('cd code && cd repo && ls').toString();
-              console.log(res1);
+              const res2 = execSync('cd code && cd repo && ls').toString();
+              console.log(res2);
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
