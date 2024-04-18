@@ -162,7 +162,7 @@ jobs:
               //console.log('_________________________________________________');
               //executeGitCommand(`git diff 'main'...$'test-pure-action-2' -- $'.cm/*.cm'`);
               //executeGitCommand(`git diff main...test-pure-action-2 .cm/*.cm`);
-              console.log('_________________________________________________');
+              console.log('________________________________________________');
               await RulesEngine().run();
             } catch (err) {
               core.error(`Failed run RulesEngine: ${err}`);
