@@ -15,7 +15,7 @@ module.exports = (async function (core) {
       }
     };
 
-    exec(`cd code && cd repo && git diff`);
+    exec(`cd code && cd repo && git branch --show-current`);
     console.log('_________________________________________________');
     await RulesEngine().run();
   } catch (err) {
