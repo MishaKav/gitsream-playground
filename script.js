@@ -2,7 +2,7 @@ const { RulesEngine } = require('@linearb/gitstream-core');
 // const { executeGitCommand } = require('@linearb/gitstream-core/dist/rule-engine/utils/git.service');
 const { execSync } = require('child_process');
 
-const main = async function () {
+module.exports = (async function (core) {
   try {
     const exec = cmd => {
       try {
@@ -22,6 +22,4 @@ const main = async function () {
     core.error(`Failed run RulesEngine: ${err}`);
     process.exit(1);
   }
-};
-
-main();
+})();
