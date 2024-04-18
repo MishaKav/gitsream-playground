@@ -19,7 +19,7 @@ module.exports = (async function (core) {
     executeGitCommand(`git rev-parse --verify main`);
     console.log('_________________________________________________');
     // executeGitCommand(`git diff 'main'...$'test-pure-action-2' -- $'.cm/*.cm'`);
-    executeGitCommand(`git diff main...test-pure-action-2`);
+    executeGitCommand(`git diff main...test-pure-action-2 .cm/*.cm`);
     console.log('_________________________________________________');
     // await RulesEngine().run();
   } catch (err) {
