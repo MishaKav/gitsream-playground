@@ -15,7 +15,7 @@ module.exports = (async function (core) {
       }
     };
 
-    exec(`cd code && cd repo && git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm'`);
+    exec(`cd code && cd repo && git diff`);
     console.log('_________________________________________________');
     await RulesEngine().run();
   } catch (err) {
