@@ -2,7 +2,7 @@
 
 name: gitStream workflow automation
 run-name: |
-  /:\ gitStream: PR #${{ fromJSON(fromJSON(github.event.inputs.client_payload)).pullRequestNumber }} from ${{ github.event.inputs.full_repository }}
+  /:\ gitStream: PR #${{ fromJSON(fromJSON(github.event.inputs.client_payload)).pullRequestNumber }}
 
 on:
   workflow_dispatch:
@@ -36,14 +36,185 @@ jobs:
     runs-on: ubuntu-latest
     name: gitStream workflow automation
     steps:
-      - name: Evaluate Rules
-        uses: linear-b/gitstream-github-action@v1
-        id: rules-engine
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          full_repository: ${{ github.event.inputs.full_repository }}
-          head_ref: ${{ github.event.inputs.head_ref }}
-          base_ref: ${{ github.event.inputs.base_ref }}
-          client_payload: ${{ github.event.inputs.client_payload }}
-          installation_id: ${{ github.event.inputs.installation_id }}
-          resolver_url: ${{ github.event.inputs.resolver_url }}
-          resolver_token: ${{ github.event.inputs.resolver_token }}
+          node-version: 18
+
+      - name: Create GitStream folder
+        run: |
+          rm -rf gitstream
+          mkdir gitstream
+          cd gitstream
+          mkdir repo
+
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.full_repository }}
+          ref: ${{ github.event.inputs.base_ref }}
+          path: 'gitstream/repo/'
+          token: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).githubToken || github.token }}
+
+      - name: Escape single quotes
+        id: safe-strings
+        uses: actions/github-script@v7
+        env:
+          BASE_REF_ARG: ${{ github.event.inputs.base_ref }}
+          HEAD_REF_ARG: ${{ github.event.inputs.head_ref }}
+          PAYLOAD_ARG: ${{ github.event.inputs.client_payload }}
+          URL_ARG: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).headHttpUrl || fromJSON(fromJSON(github.event.inputs.client_payload)).repoUrl }}
+        with:
+          script: |
+            try {
+              function convertToSafeString(input) {
+                return (input || '').replace(/['`]/g, "\\$&");
+              };
+              function escapeApostrophe(input) {
+                return (input || '').replace(/'/g, "\\'");
+              };
+              const base_ref = escapeApostrophe(process.env.BASE_REF_ARG);
+              const head_ref = escapeApostrophe(process.env.HEAD_REF_ARG);
+              const url = convertToSafeString(process.env.URL_ARG);
+              const client_payload = convertToSafeString(process.env.PAYLOAD_ARG);
+              core.setOutput('base_ref', base_ref);
+              core.setOutput('head_ref', head_ref);
+              core.setOutput('url', url);
+              core.setOutput('client_payload', client_payload);
+            } catch (err) {
+              core.error(`Failed producing safe string: ${err}`);
+              process.exit(1);
+            }
+
+      - name: Checkout Pull Request branches history
+        run: |
+          all=2147483647
+          cd gitstream
+          cd repo
+          git fetch --deepen=$all origin $'${{ steps.safe-strings.outputs.base_ref }}'
+          git remote add upstream $'${{ steps.safe-strings.outputs.url }}'
+          git fetch --deepen=$all upstream $'${{ steps.safe-strings.outputs.head_ref }}'
+          git checkout -b $'upstream/${{ steps.safe-strings.outputs.head_ref}}' $'upstream/${{ steps.safe-strings.outputs.head_ref}}'
+          git checkout $'${{ steps.safe-strings.outputs.base_ref }}'
+          git checkout $'${{ steps.safe-strings.outputs.head_ref }}'
+
+      - name: Create cm folder
+        run: |
+          cd gitstream
+          mkdir cm
+
+      - name: Checkout cm repo
+        uses: actions/checkout@v4
+        if: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).hasCmRepo == true }}
+        with:
+          repository: '${{ fromJSON(fromJSON(github.event.inputs.client_payload)).owner }}/${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepo }}'
+          ref: ${{ fromJSON(fromJSON(github.event.inputs.client_payload)).cmRepoRef }}
+          path: 'gitstream/cm/'
+
+      - name: Volume folder
+        run: |
+          mv gitstream code
+
+      - name: Init JFrog
+        run: |
+          curl -H "X-JFrog-Art-API: ${{ secrets.ARTIFACTORY_API_KEY }}" https://linearb.jfrog.io/linearb/api/npm/npm-local/auth/linearb >> .npmrc
+
+      - name: NPM Cache
+        id: npm-cache
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: '**/node_modules'
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm
+
+      - name: Install Dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      # - name: Run Code
+      #   run: |
+      #     cd code
+      #     cd repo && git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm' > diff.txt
+      #     cat diff.txt
+
+      - name: Run RulesEngine
+        uses: actions/github-script@v7
+        env:
+          HEAD_REF: ${{ steps.safe-strings.outputs.head_ref }}
+          BASE_REF: ${{ steps.safe-strings.outputs.base_ref }}
+          CLIENT_PAYLOAD: ${{ steps.safe-strings.outputs.client_payload }}
+          RULES_RESOLVER_URL: ${{ github.event.inputs.resolver_url }}
+          RULES_RESOLVER_TOKEN: ${{ github.event.inputs.resolver_token }}
+          DEBUG_MODE: true
+        with:
+          script: |
+            const { RulesEngine, executeGitCommand } = require('@linearb/gitstream-core');
+            const { execSync } = require('child_process');
+            // require('./script.js')(core);
+
+            try {
+              //executeGitCommand(`git branch --show-current`);
+              //executeGitCommand(`git rev-parse --verify test-pure-action-2`);
+              //executeGitCommand(`git rev-parse --verify main`);
+              //console.log('_________________________________________________');
+              //executeGitCommand(`git diff 'main'...$'test-pure-action-2' -- $'.cm/*.cm'`);
+              //executeGitCommand(`git diff main...test-pure-action-2 .cm/*.cm`);
+              console.log('________________________________________________');
+              await RulesEngine().run();
+            } catch (err) {
+              core.error(`Failed run RulesEngine: ${err}`);
+              process.exit(1);
+            }
+
+      # - name: Run The Action
+      #   if: always()
+      #   run: |
+      #     env_file=env.user
+      #     touch $env_file
+      #     for var in $(env | cut -d "=" -f 1); do
+      #       value="${!var}"
+      #       echo "$var=$value" >> "$env_file"
+      #     done
+      #     docker pull gitstream/rules-engine:latest
+      #     docker run --env-file $env_file \
+      #     -v $(pwd)/gitstream:/code \
+      #     -e HEAD_REF=$'upstream/${{ steps.safe-strings.outputs.head_ref }}' \
+      #     -e BASE_REF=$'${{ steps.safe-strings.outputs.base_ref }}' \
+      #     -e CLIENT_PAYLOAD=${{ steps.safe-strings.outputs.client_payload }} \
+      #     -e RULES_RESOLVER_URL=${{ github.event.inputs.resolver_url }} \
+      #     -e RULES_RESOLVER_TOKEN=${{ github.event.inputs.resolver_token }} \
+      #     -e DEBUG_MODE=${{ github.event.inputs.debug_mode }} gitstream/rules-engine:latest
+
+      # - name: Run The Action
+      #   if: always()
+      #   run: |
+      #     env_file=env.user
+      #     touch $env_file
+      #     for var in $(env | cut -d "=" -f 1); do
+      #       value="${!var}"
+      #       echo "$var=$value" >> "$env_file"
+      #     done
+      #     docker pull gitstream/rules-engine:latest
+      #     docker run --env-file $env_file \
+      #     -v $(pwd)/gitstream:/code \
+      #     -e HEAD_REF=$'upstream/${{ steps.safe-strings.outputs.head_ref }}' \
+      #     -e BASE_REF=$'${{ steps.safe-strings.outputs.base_ref }}' \
+      #     -e CLIENT_PAYLOAD=${{ steps.safe-strings.outputs.client_payload }} \
+      #     -e RULES_RESOLVER_URL=${{ github.event.inputs.resolver_url }} \
+      #     -e RULES_RESOLVER_TOKEN=${{ github.event.inputs.resolver_token }} \
+      #     -e DEBUG_MODE=${{ github.event.inputs.debug_mode }} gitstream/rules-engine:latest
+
+      # - name: Evaluate Rules
+      #   uses: linear-b/gitstream-github-action@v1
+      #   id: rules-engine
+      #   with:
+      #     full_repository: ${{ github.event.inputs.full_repository }}
+      #     head_ref: ${{ github.event.inputs.head_ref }}
+      #     base_ref: ${{ github.event.inputs.base_ref }}
+      #     client_payload: ${{ github.event.inputs.client_payload }}
+      #     installation_id: ${{ github.event.inputs.installation_id }}
+      #     resolver_url: ${{ github.event.inputs.resolver_url }}
+      #     resolver_token: ${{ github.event.inputs.resolver_token }}
