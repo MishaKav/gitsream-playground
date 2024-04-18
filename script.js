@@ -1,7 +1,7 @@
-const { RulesEngine, executeGitCommand } = require('@linearb/gitstream-core');
-const { execSync } = require('child_process');
-
 module.exports = (async function (core) {
+  const { RulesEngine, executeGitCommand } = require('@linearb/gitstream-core');
+  const { execSync } = require('child_process');
+
   try {
     const exec = cmd => {
       try {
@@ -17,6 +17,8 @@ module.exports = (async function (core) {
     executeGitCommand(`git branch --show-current`);
     executeGitCommand(`git rev-parse --verify test-pure-action-2`);
     executeGitCommand(`git rev-parse --verify main`);
+    console.log('_________________________________________________');
+    executeGitCommand(`git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm'`);
     console.log('_________________________________________________');
     // await RulesEngine().run();
   } catch (err) {
