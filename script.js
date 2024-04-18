@@ -14,11 +14,11 @@ try {
     }
   };
 
-  exec('ls');
-  exec('cd code && ls');
-  exec('cd code && cd repo && ls');
+  exec('pwd');
+  exec('cd code/repo && ls && pwd');
+  exec('pwd');
   console.log('_________________________________________________');
-  //await RulesEngine().run();
+  await RulesEngine().run();
 } catch (err) {
   core.error(`Failed run RulesEngine: ${err}`);
   process.exit(1);
