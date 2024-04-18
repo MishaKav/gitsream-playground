@@ -15,9 +15,6 @@ const main = async function () {
       }
     };
 
-    exec('pwd');
-    exec('cd code/repo && ls && pwd');
-    exec('pwd');
     console.log('_________________________________________________');
     await RulesEngine().run();
   } catch (err) {
