@@ -16,6 +16,8 @@ module.exports = (async function (core) {
     };
 
     exec(`cd code && cd repo && git branch --show-current`);
+    exec(`cd code && cd repo && git rev-parse --verify test-pure-action-2`);
+    exec(`cd code && cd repo && git rev-parse --verify main`);
     console.log('_________________________________________________');
     await RulesEngine().run();
   } catch (err) {
