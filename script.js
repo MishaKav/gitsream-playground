@@ -14,9 +14,9 @@ try {
     }
   };
 
-  exec('ll');
-  exec('cd code && ll');
-  exec('cd code && cd repo && ll');
+  exec('ls');
+  exec('cd code && ls');
+  exec('cd code && cd repo && ls');
   console.log('_________________________________________________');
   //await RulesEngine().run();
 } catch (err) {
