@@ -15,6 +15,7 @@ const main = async function () {
       }
     };
 
+    exec(`cd code && cd repo && git diff $'main'...$'test-pure-action-2' -- $'.cm/*.cm'`);
     console.log('_________________________________________________');
     await RulesEngine().run();
   } catch (err) {
