@@ -18,7 +18,7 @@ module.exports = (async function (core) {
     executeGitCommand(`git rev-parse --verify test-pure-action-2`);
     executeGitCommand(`git rev-parse --verify main`);
     console.log('_________________________________________________');
-    await RulesEngine().run();
+    // await RulesEngine().run();
   } catch (err) {
     core.error(`Failed run RulesEngine: ${err}`);
     process.exit(1);
