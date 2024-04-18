@@ -151,7 +151,23 @@ jobs:
           DEBUG_MODE: true
         with:
           script: |
-            require('./script.js')(core);
+            const { RulesEngine, executeGitCommand } = require('@linearb/gitstream-core');
+            const { execSync } = require('child_process');
+            // require('./script.js')(core);
+
+            try {
+              //executeGitCommand(`git branch --show-current`);
+              //executeGitCommand(`git rev-parse --verify test-pure-action-2`);
+              //executeGitCommand(`git rev-parse --verify main`);
+              //console.log('_________________________________________________');
+              //executeGitCommand(`git diff 'main'...$'test-pure-action-2' -- $'.cm/*.cm'`);
+              //executeGitCommand(`git diff main...test-pure-action-2 .cm/*.cm`);
+              console.log('_________________________________________________');
+              await RulesEngine().run();
+            } catch (err) {
+              core.error(`Failed run RulesEngine: ${err}`);
+              process.exit(1);
+            }
 
       # - name: Run The Action
       #   if: always()
