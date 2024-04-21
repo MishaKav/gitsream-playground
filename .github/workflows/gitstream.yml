@@ -126,7 +126,7 @@ jobs:
 
       - name: Install Dependencies
         if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm i
 
       - name: Run RulesEngine
         uses: actions/github-script@v7
