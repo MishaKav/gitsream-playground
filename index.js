@@ -1,1 +1,1 @@
-import { LambdaFunction } from './home';
+import { LambdaFunction } from './home'
