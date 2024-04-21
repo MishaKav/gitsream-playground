@@ -4,9 +4,9 @@
 manifest:
   version: 1.0
 
-config:
-  ignore_repositories:
-    - gitsream-playground
+#config:
+#  ignore_repositories:
+#    - gitsream-playground
     
 automations:
   # Add a label that indicates how many minutes it will take to review the PR.
