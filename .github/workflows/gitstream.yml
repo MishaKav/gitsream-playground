@@ -36,6 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     name: gitStream workflow automation
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - run: pip install black
+
       - name: Create GitStream folder
         run: |
           rm -rf gitstream
