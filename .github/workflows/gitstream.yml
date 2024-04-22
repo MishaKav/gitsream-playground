@@ -37,10 +37,10 @@ jobs:
     name: gitStream workflow automation
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v5
         with:
-          node-version: 18
+          cache: 'pip'
+      - run: pip install black==24.4.0
 
       - name: Create GitStream folder
         run: |
