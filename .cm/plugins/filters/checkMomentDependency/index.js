@@ -8,5 +8,6 @@ module.exports = repo => {
   }
 
   const result = moment().format('MMMM Do YYYY, h:mm:ss a');
+  console.log(`checkMomentDependency result: ${result}`);
   return result;
 };
