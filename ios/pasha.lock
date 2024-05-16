@@ -1,3 +1,3 @@
-export const packageLock9 = {
+export const packageLock10 = {
   name: '@linearb/gitstream-core'
 };
