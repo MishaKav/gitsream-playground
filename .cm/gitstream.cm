@@ -22,7 +22,7 @@ manifest:
 
 config:
   ignore_files:
-    - '*.lock'
+    - ios/*.lock
     - pash'a.ts
 # +----------------------------------------------------------------------------+
 # | Automations
