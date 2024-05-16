@@ -1,4 +1,4 @@
-export const packageLock = {
+export const packageLock2 = {
   name: '@linearb/gitstream-core',
   version: '1.3.143',
   lockfileVersion: 2,
