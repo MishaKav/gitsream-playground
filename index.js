@@ -4,7 +4,8 @@ const {
   FILE_CONTENT,
   LS_FILES,
   DIFF,
-  GIT_SHOW
+  GIT_SHOW,
+  GIT_CHECKOUT
 } = require('@linearb/gitstream-core');
 
 // git diff
@@ -34,7 +35,7 @@ const branches = [
 const files = [`pash'a.ts `, 'pash"a.ts'];
 branches.forEach(branch => {
   files.forEach(file => {
-    const cmd = GIT_SHOW({ branch, file });
+    const cmd = GIT_CHECKOUT(branch);
     console.log(cmd);
     const result = executeGitCommand(cmd, './');
     console.log(result);
