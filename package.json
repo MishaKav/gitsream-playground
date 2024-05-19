@@ -9,6 +9,6 @@
   "author": "MishaKav",
   "license": "ISC",
   "dependencies": {
-    "@linearb/gitstream-core": "^1.3.143"
+    "@linearb/gitstream-core": "file:.yalc/@linearb/gitstream-core"
   }
 }
