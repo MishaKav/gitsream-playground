@@ -37,7 +37,7 @@ branches.forEach(branch => {
   files.forEach(file => {
     const cmd = GIT_CHECKOUT(branch);
     console.log(cmd);
-    const result = executeGitCommand(cmd, './');
+    // const result = executeGitCommand(cmd, './');
     console.log(result);
   });
 });
