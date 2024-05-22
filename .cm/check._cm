@@ -1,0 +1,15 @@
+
+manifest:
+  version: 1.0
+
+automations:
+  check_moment_dependency:
+    if:
+      - true
+    run:
+      - action: add-comment@v1
+        args:
+          comment: |
+             Result of `moment` is `{{ checkMomentDependency }}`
+
+moment_result: {{ repo | checkMomentDependency }}
