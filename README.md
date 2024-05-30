@@ -5,3 +5,5 @@ A new repository was created for exploring and experimenting with the GitStream 
 https://app.gitstream.cm/playground
 
 main
+
+checking the core integration
