@@ -36,8 +36,14 @@ jobs:
     runs-on: ubuntu-latest
     name: gitStream workflow automation
     steps:
+      - uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: |
+            code/output
+
       - name: Evaluate Rules
-        uses: linear-b/gitstream-github-action@v2-misha
+        uses: linear-b/gitstream-github-action@v2-context-manager
         with:
           full_repository: ${{ github.event.inputs.full_repository }}
           head_ref: ${{ github.event.inputs.head_ref }}
