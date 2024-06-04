@@ -40,6 +40,8 @@ jobs:
         with:
           name: output
           path: |
+            output
+            dist/output
             code/output
             ${{ github.action_path }}/code/output
             
