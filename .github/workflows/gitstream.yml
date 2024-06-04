@@ -43,8 +43,8 @@ jobs:
             output
             dist/output
             code/output
-            ${{ github.action_path }}
-            ${{ github.action_path }}/
+            ${{ github.action_path }}/dist/output
+            ${{ github.action_path }}/code
             ${{ github.action_path }}/code/output
             
 
