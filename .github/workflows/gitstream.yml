@@ -44,8 +44,7 @@ jobs:
             dist/output
             code/output
             ${{ github.action_path }}
-            ${{ github.action_path }}/../
-            ${{ github.action_path }}/../../
+            ${{ github.action_path }}/
             ${{ github.action_path }}/code/output
             
 
