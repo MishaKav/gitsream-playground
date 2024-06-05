@@ -43,11 +43,6 @@ jobs:
             output
             dist/output
             code/output
-            ${{ github.action_path }}/v2-context-manager/dist/output
-            ${{ github.action_path }}/v2-context-manager/dist/code
-            ${{ github.action_path }}/v2-context-manager/code
-            ${{ github.action_path }}/v2-context-manager/output
-            
 
       - name: Evaluate Rules
         uses: linear-b/gitstream-github-action@v2-context-manager
