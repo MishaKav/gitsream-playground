@@ -51,4 +51,6 @@ jobs:
         with:
           name: output
           path: |
+            output
+            code/output
             /tmp/output
