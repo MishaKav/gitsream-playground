@@ -36,13 +36,6 @@ jobs:
     runs-on: ubuntu-latest
     name: gitStream workflow automation
     steps:
-      - uses: actions/upload-artifact@v4
-        with:
-          name: output
-          path: |
-            /tmp/output
-            /tmp/outptut
-
       - name: Evaluate Rules
         uses: linear-b/gitstream-github-action@v2-context-manager
         with:
@@ -53,3 +46,9 @@ jobs:
           installation_id: ${{ github.event.inputs.installation_id }}
           resolver_url: ${{ github.event.inputs.resolver_url }}
           resolver_token: ${{ github.event.inputs.resolver_token }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: |
+            /tmp/output
