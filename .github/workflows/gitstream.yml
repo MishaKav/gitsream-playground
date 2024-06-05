@@ -51,4 +51,5 @@ jobs:
         with:
           name: output
           path: |
-            ${{ github.workspace }}/output
+            code/output
+            ${{ github.workspace }}/code/output
