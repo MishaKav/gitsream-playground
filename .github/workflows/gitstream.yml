@@ -40,9 +40,7 @@ jobs:
         with:
           name: output
           path: |
-            output
-            dist/output
-            code/output
+            /tmp/output
 
       - name: Evaluate Rules
         uses: linear-b/gitstream-github-action@v2-context-manager
