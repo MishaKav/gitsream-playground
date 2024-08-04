@@ -37,7 +37,7 @@ jobs:
     name: gitStream workflow automation
     steps:
       - name: Evaluate Rules
-        uses: linear-b/gitstream-github-action@v2-misha
+        uses: linear-b/gitstream-github-action@v2
         with:
           full_repository: ${{ github.event.inputs.full_repository }}
           head_ref: ${{ github.event.inputs.head_ref }}
@@ -46,3 +46,9 @@ jobs:
           installation_id: ${{ github.event.inputs.installation_id }}
           resolver_url: ${{ github.event.inputs.resolver_url }}
           resolver_token: ${{ github.event.inputs.resolver_token }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          retention-days: 3
+          name: output
+          path: code/output

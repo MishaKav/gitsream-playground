@@ -30,6 +30,13 @@ config:
 # +----------------------------------------------------------------------------+
 
 automations:
+  assign_code_editors:
+    if:
+      - true
+    run:
+      - action: add-reviewers@v1
+        args:
+          reviewers: {{ calc2.owners }}
   # Apply color coded labels to PRs based on the estimated time to review.
   # https://docs.gitstream.cm/automations/provide-estimated-time-to-review/
   estimated_time_to_review:
@@ -110,3 +117,6 @@ is:
   docs: {{ files | allDocs }}
   tests: {{ files | allTests }}
   image: {{ files | allImages }}
+
+calc2:
+  owners: {{ repo | rankByGitBlame(lt=50) }}
