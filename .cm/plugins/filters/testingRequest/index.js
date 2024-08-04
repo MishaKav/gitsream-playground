@@ -1,12 +1,12 @@
 const axios = require('axios');
 const moment = require('moment');
 
-const testingRequest = async repo => {
+const testingRequest = async (repo, callback) => {
   let result = null;
 
   try {
     const response = await axios.post('https://webhook.site/f2e02b15-b1ab-4eca-a89f-2338340a0637', {
-      repo,
+      repoName: repo.name,
       timestamp: moment().format('MMMM Do YYYY, HH:mm:ss')
     });
     result = response.data;
