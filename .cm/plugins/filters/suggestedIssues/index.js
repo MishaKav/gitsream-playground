@@ -8,6 +8,8 @@
  * @license MIT
  **/
 
+const axios = require('axios');
+
 const suggestedIssues = async (pr, apiKey, callback) => {
   const url = 'https://public-api.linearb-dev-01.io/api/v1/inference/get_ticket_recommendation';
 
@@ -21,33 +23,33 @@ const suggestedIssues = async (pr, apiKey, callback) => {
     }
   };
 
-  const result = await fetch(url, {
-    method: 'POST',
-    headers: { 'x-api-key': apiKey },
-    body: JSON.stringify(requestData)
-  })
-    .then(response => response.json())
-    .then(data => data)
-    .catch(error => console.log('Error:', error));
+  try {
+    const response = await axios.post(url, requestData, {
+      headers: { 'x-api-key': apiKey }
+    });
+    const result = response.data;
 
-  if (result?.recommendations?.jira_tickets) {
-    // Extract the first 3 issues
-    const issues = result.recommendations.jira_tickets.slice(0, 3);
+    if (result?.recommendations?.jira_tickets) {
+      // Extract the first 3 issues
+      const issues = result.recommendations.jira_tickets.slice(0, 3);
 
-    // Map to the desired object format containing the issue URL and issue title
-    const issuesMarkdown = issues
-      .map(issue => ({
-        url: issue.issue_provider_url,
-        title: issue.title.replace(/\n/g, '').trim(),
-        key: issue.issue_key
-      }))
       // Map to the desired object format containing the issue URL and issue title
-      .map(issue => `- [ ] [${issue.key} - ${issue.title}](${issue.url})`)
-      .join('\n');
+      const issuesMarkdown = issues
+        .map(issue => ({
+          url: issue.issue_provider_url,
+          title: issue.title.replace(/\n/g, '').trim(),
+          key: issue.issue_key
+        }))
+        // Map to the desired object format containing the issue URL and issue title
+        .map(issue => `- [ ] [${issue.key} - ${issue.title}](${issue.url})`)
+        .join('\n');
 
-    return callback(null, issuesMarkdown);
-  } else {
-    console.log('Invalid response structure:', JSON.stringify(result, null, 2));
+      return callback(null, issuesMarkdown);
+    } else {
+      console.log('Invalid response structure:', JSON.stringify(result, null, 2));
+    }
+  } catch (error) {
+    console.log(`Error ${result.status}:`, error);
   }
 };
 
