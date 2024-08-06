@@ -33,6 +33,8 @@ const suggestedIssues = async (pr, apiKey, callback) => {
     .then(data => data)
     .catch(error => console.log('Error:', error));
 
+  console.log('result:', JSON.stringify(result, null, 2));
+  return callback(null, JSON.stringify('issuesMarkdown'));
   if (result && result.recommendations && result.recommendations.jira_tickets) {
     // Extract the first 3 issues
     const issues = result.recommendations.jira_tickets.slice(0, 3);
