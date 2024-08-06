@@ -19,8 +19,6 @@ automations:
 
             {{ pr | suggestedIssues(env.LINEARB_TOKEN)) }}
 
-            *✨ This list was created using LinearBs AI service*
-
   # # If the PR author has indicated that they used a specific issue,
   # # add it to the PR description and title
   # add_selected_issue_to_pr:
