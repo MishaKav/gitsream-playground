@@ -16,26 +16,21 @@ const suggestedIssues = async (pr, apiKey, callback) => {
     pull_request: {
       title: pr.title, // PR title
       issuer_name: pr.author, // PR author
-      created_at: pr.created_at // PR creation date
+      // created_at: pr.created_at // PR creation date
+      created_at: '2024-07-29T08:33:15Z' // PR creation date
     }
   };
 
   const result = await fetch(url, {
     method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'Content-Type': 'application/json',
-      accept: 'application/json'
-    },
+    headers: { 'x-api-key': apiKey },
     body: JSON.stringify(requestData)
   })
     .then(response => response.json())
     .then(data => data)
     .catch(error => console.log('Error:', error));
 
-  console.log('result:', JSON.stringify(result, null, 2));
-  return callback(null, JSON.stringify('issuesMarkdown'));
-  if (result && result.recommendations && result.recommendations.jira_tickets) {
+  if (result?.recommendations?.jira_tickets) {
     // Extract the first 3 issues
     const issues = result.recommendations.jira_tickets.slice(0, 3);
 
@@ -49,9 +44,8 @@ const suggestedIssues = async (pr, apiKey, callback) => {
       // Map to the desired object format containing the issue URL and issue title
       .map(issue => `- [ ] [${issue.key} - ${issue.title}](${issue.url})`)
       .join('\n');
-    console.log('suggestedIssues:', { issuesMarkdown });
 
-    return callback(null, JSON.stringify(issuesMarkdown));
+    return callback(null, issuesMarkdown);
   } else {
     console.log('Invalid response structure:', JSON.stringify(result, null, 2));
   }
