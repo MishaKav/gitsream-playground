@@ -86,6 +86,13 @@ automations:
           label: 🗑️ Deleted files
           color: {{ colors.orange }}
 
+  explain_code_experts:
+    if:
+      - true
+    run:
+      - action: explain-code-experts@v1 
+        args:
+          gt: 1
 
 # +----------------------------------------------------------------------------+
 # | Custom Expressions                                                         |
