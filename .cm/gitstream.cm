@@ -1,44 +1,9 @@
 # -*- mode: yaml -*-
-# +----------------------------------------------------------------------------+
-# | /:\ gitStream: Workflow automation for the code review process.            |
-# +----------------------------------------------------------------------------+
-# | This file contains one or more /:\ gitStream automations:                  |
-# | https:// docs.gitstream.cm                                                 |
-# |                                                                            |
-# | gitStream uses YAML syntax with nunjucks templating via Jinja 2.           |
-# |                                                                            |
-# | Automations follow an "if this, then that" execution format.               |
-# | More info here: https://docs.gitstream.cm/how-it-works/                    |
-# |                                                                            |
-# +----------------------------------------------------------------------------+
-
-# /:\ gitStream Reference Docs: 
-#    Context Variables: https://docs.gitstream.cm/context-variables/
-#    Filter Functions: https://docs.gitstream.cm/filter-functions/
-#    Automation Actions: https://docs.gitstream.cm/automation-actions/
 
 manifest:
   version: 1.0
 
-config:
-  ignore_files:
-    - ios/*.lock
-    - pash'a.ts
-
-# +----------------------------------------------------------------------------+
-# | Automations
-# +----------------------------------------------------------------------------+
-
 automations:
-  assign_code_editors:
-    if:
-      - true
-    run:
-      - action: add-reviewers@v1
-        args:
-          reviewers: {{ calc2.owners }}
-  # Apply color coded labels to PRs based on the estimated time to review.
-  # https://docs.gitstream.cm/automations/provide-estimated-time-to-review/
   estimated_time_to_review:
     if:
       - true
@@ -49,22 +14,15 @@ automations:
           color: {{ colors.red if (calc.etr >= 20) else ( colors.yellow if (calc.etr >= 5) else colors.green ) }}
 
   safe_changes:
-    # Triggered for any changes that only affect formatting, documentation, tests, or images
     if:
       - {{ is.formatting or is.docs or is.tests or is.image }}
-    # Apply a safe change label, approve the PR and explain why in a comment.
     run: 
-      - action: add-label@v1
-        args:
-          label: 'safe-change'
       - action: approve@v1
       - action: add-comment@v1
         args:
           comment: |
             This PR is considered a safe change and has been automatically approved.
 
-  # Flag PRs that have unresolved comment threads.
-  # https://docs.gitstream.cm/automations/standard/label-management/label-unresolved-threads/
   label_unresolved_threads:  
     if:
       - {{ pr.status == 'open' }}  
@@ -75,8 +33,6 @@ automations:
           label: 🚨 {{ pr.unresolved_threads }} Unresolved Thread(s)
           color: {{ colors.yellow }}  
 
-  # Flag PRs that delete files to highlight potential refactors that need extra scrutiny.
-  # https://docs.gitstream.cm/automations/label-deleted-files/
   flag_deleted_files:
     if:
       - {{ has.deleted_files }}
@@ -94,12 +50,6 @@ automations:
         args:
           gt: 1
 
-# +----------------------------------------------------------------------------+
-# | Custom Expressions                                                         |
-# | https://docs.gitstream.cm/how-it-works/#custom-expressions                 |
-# +----------------------------------------------------------------------------+
-
-# https://docs.gitstream.cm/filter-functions/#estimatedreviewtime
 calc:
   etr: {{ branch | estimatedReviewTime }}
 
@@ -118,12 +68,8 @@ colors:
   blue: '1d76db'
   purple: '5319e7'
 
-# These custom expressions are used in the safe_changes automation
 is:
   formatting: {{ source.diff.files | isFormattingChange }}
   docs: {{ files | allDocs }}
   tests: {{ files | allTests }}
   image: {{ files | allImages }}
-
-calc2:
-  owners: {{ repo | rankByGitBlame(lt=50) }}
