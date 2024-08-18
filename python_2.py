@@ -1,4 +1,4 @@
-def say_hello_lfs():
+def say_hello_2():
     print('Hello, from Python LFS')
     
-say_hello_lfs()
+say_hello_2()
