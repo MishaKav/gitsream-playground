@@ -17,7 +17,7 @@ automations:
     if:
       - {{ is.formatting or is.docs or is.tests or is.image }}
     run: 
-      - action: approve@v1
+      # - action: approve@v1
       - action: add-comment@v1
         args:
           comment: |
@@ -44,7 +44,7 @@ automations:
 
   explain_code_experts:
     if:
-      - true
+      - {{ pr.title | includes(term="explain_code_experts") }}
     run:
       - action: explain-code-experts@v1 
         args:
