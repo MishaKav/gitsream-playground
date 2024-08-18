@@ -15,6 +15,7 @@ automations:
 
   safe_changes:
     if:
+      - {{ is.safe }}
       - {{ is.formatting or is.docs or is.tests or is.image }}
     run: 
       # - action: approve@v1
@@ -69,6 +70,7 @@ colors:
   purple: '5319e7'
 
 is:
+  safe: {{ is.docs or is.tests or is.asset or is.formatting }}
   formatting: {{ source.diff.files | isFormattingChange }}
   docs: {{ files | allDocs }}
   tests: {{ files | allTests }}
