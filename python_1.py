@@ -15,3 +15,5 @@ def nop2():
     print("test")
     print("test")
     print("test")
+
+output
