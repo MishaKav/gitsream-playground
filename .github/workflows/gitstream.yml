@@ -40,6 +40,7 @@ jobs:
         uses: linear-b/gitstream-github-action@v2-misha
         env:
           LINEARB_TOKEN: ${{ secrets.LINEARB_TOKEN }}
+          ENABLE_DEBUG_ARTIFACTS: true
         with:
           full_repository: ${{ github.event.inputs.full_repository }}
           head_ref: ${{ github.event.inputs.head_ref }}
@@ -49,9 +50,3 @@ jobs:
           resolver_url: ${{ github.event.inputs.resolver_url }}
           resolver_token: ${{ github.event.inputs.resolver_token }}
           debug_mode: 'true'
-
-      - uses: actions/upload-artifact@v4
-        with:
-          retention-days: 3
-          name: output
-          path: code/output
