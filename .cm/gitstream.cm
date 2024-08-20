@@ -8,6 +8,15 @@ automations:
     if:
       - true
     run:
+      - action: add-comment@v1
+        args:
+          comment: |
+            You can’t merge `{{ repo.name }}` on this time without leader approval.
+            Thursday 15.00-18.00: `EladKohavi`, `Fadikhayo1995`, `negevyoav`, `stas-linearb`, `omarcovitch`, `saharavishag`
+            Thursday: 18.00+: `ariel-linearb`, `orielz`
+            Working day 19.00+: `ariel-linearb`, `orielz` 
+            Friday, Saturday: `ariel-linearb`, `orielz`
+
       - action: add-label@v1
         args:
           label: "{{ calc.etr }} min review"
