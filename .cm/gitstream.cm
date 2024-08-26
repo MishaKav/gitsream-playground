@@ -4,10 +4,10 @@ manifest:
   version: 1.0
 
 automations:
-  estimated_time_to_review:
-    if:
+#  estimated_time_to_review:
+#    if:
       - true
-    run:
+#    run:
       - action: add-label@v1
         args:
           label: "{{ calc.etr }} min review"
@@ -15,7 +15,6 @@ automations:
 
   safe_changes:
     if:
-      - {{ is.safe }}
       - {{ is.formatting or is.docs or is.tests or is.image }}
     run: 
       # - action: approve@v1
@@ -24,32 +23,32 @@ automations:
           comment: |
             This PR is considered a safe change and has been automatically approved.
 
-  label_unresolved_threads:  
-    if:
-      - {{ pr.status == 'open' }}  
-      - {{ pr.unresolved_threads }}
-    run:
-      - action: add-label@v1
-        args:
-          label: 🚨 {{ pr.unresolved_threads }} Unresolved Thread(s)
-          color: {{ colors.yellow }}  
-
-  flag_deleted_files:
-    if:
-      - {{ has.deleted_files }}
-    run: 
-      - action: add-label@v1
-        args:
-          label: 🗑️ Deleted files
-          color: {{ colors.orange }}
-
-  explain_code_experts:
-    if:
-      - {{ pr.title | includes(term="explain_code_experts") }}
-    run:
-      - action: explain-code-experts@v1 
-        args:
-          gt: 1
+#  label_unresolved_threads:  
+#    if:
+#      - {{ pr.status == 'open' }}  
+#      - {{ pr.unresolved_threads }}
+#    run:
+#      - action: add-label@v1
+#        args:
+#          label: 🚨 {{ pr.unresolved_threads }} Unresolved Thread(s)
+#          color: {{ colors.yellow }}  
+#
+#  flag_deleted_files:
+#    if:
+#      - {{ has.deleted_files }}
+#    run: 
+#      - action: add-label@v1
+#        args:
+#          label: 🗑️ Deleted files
+#          color: {{ colors.orange }}
+#
+#  explain_code_experts:
+#    if:
+#      - {{ pr.title | includes(term="explain_code_experts") }}
+#    run:
+#      - action: explain-code-experts@v1 
+#        args:
+#          gt: 1
 
 calc:
   etr: {{ branch | estimatedReviewTime }}
@@ -70,7 +69,6 @@ colors:
   purple: '5319e7'
 
 is:
-  safe: {{ is.docs or is.tests or is.asset or is.formatting }}
   formatting: {{ source.diff.files | isFormattingChange }}
   docs: {{ files | allDocs }}
   tests: {{ files | allTests }}
