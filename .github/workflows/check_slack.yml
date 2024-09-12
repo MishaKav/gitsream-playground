@@ -121,11 +121,11 @@ jobs:
         uses: Ilshidur/action-slack@master
         with:
           args: |
-            <!here> ${{ github.actor }} is taking `${{ inputs.service }}` in `${{ inputs.env }}` (${{ env.REGION }}) for `${{ inputs.duration }}`
+            <!here> ${{ github.actor }} is taking `${{ inputs.service }}` in `${{ inputs.env }}` (_${{ env.REGION }}_) for `${{ inputs.duration }}`
 
       - name: Slack notification on success, failure, or cancellation
         if: always()
         uses: Ilshidur/action-slack@master
         with:
           args: |
-            Deployment of ${{ inputs.service }} (ref: _${{ inputs.ref }}_) to ${{ inputs.env }} completed with status: `${{ job.status }}`
+            Deployment of *${{ inputs.service }}* (ref: _${{ inputs.ref }}_) to ${{ inputs.env }} completed with status: `${{ job.status }}`
