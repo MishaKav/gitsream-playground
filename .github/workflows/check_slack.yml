@@ -1,0 +1,131 @@
+name: Deploy To Dev
+run-name: Deploy `${{ inputs.service }}` in `${{ inputs.env }}` for `${{ inputs.duration }}`
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Select the environment you want to deploy to:'
+        required: true
+        type: choice
+        options:
+          - dev-01
+          - dev-02
+          - dev-03
+          - qa-01
+      service:
+        description: 'Select the service you want to deploy:'
+        required: true
+        type: choice
+        options:
+          - api-gateway
+          - automations-mfa
+          - dev-coaching-mfa
+          - e2e-api
+          - e2e-worker
+          - graphql-api
+          - linjobs
+          - linpr
+          - linrest
+          - linta
+          - notifier
+          - pdt-api
+          - pm-connectors
+          - pm-rest
+          - resources-api
+          - sensors
+          - settings
+          - sls-app-notifications-center
+          - sls-audit
+          - sls-custom-dashboard-api
+          - sls-customer-data
+          - sls-error-handling
+          - sls-invitation
+          - sls-jobs-dispatcher-lambda
+          - sls-metrics-api
+          - sls-notification-digest-lambda
+          - sls-on-prem-api
+          - sls-pm-report-lambda
+          - sls-pm-view
+          - sls-public-api
+          - sls-resource-allocation
+          - sls-rule-engine-lambda
+          - sls-scheduled-jobs-suites
+          - sls-settings-events-lambda
+          - sls-tokens
+          - sls-tsdb-workers
+          - sls-webhooks
+          - sls-webhooks-internal-api
+          - workerb-api
+      duration:
+        description: 'Specify the duration you need the service for:'
+        required: true
+        type: choice
+        options:
+          - 30m
+          - 45m
+          - 1h
+          - 2h
+          - 3h
+          - 4h
+          - 5h
+          - 6h
+          - 7h
+          - 8h
+          - all day
+      ref:
+        description: 'Provide the ref (tag or branch) you want to deploy:'
+        required: true
+
+concurrency:
+  group: deploy-${{ github.event.inputs.env }}-${{ github.event.inputs.service }}
+
+env:
+  ENV: ${{ github.event.inputs.env }}
+
+jobs:
+  deploy:
+    name: '${{ github.event.inputs.env }} Deployment'
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+      ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+      SLACK_WEBHOOK: ${{ secrets.WORKFLOW_BOT_WEBHOOK }}
+      SLACK_USERNAME: $GITHUB_ACTOR
+      SLACK_CHANNEL: taking-envs
+      CI_USER_GIT_TOKEN: ${{ secrets.CI_USER_GIT_TOKEN }}
+      PYTHON_VERSION: 3.8
+      KUBECTL_VERSION: v1.30.0
+      HELM_VERSION: v3.14.4
+      GH_ACTOR: ${{ github.actor }}
+      SERVICE_NAME: ${{ github.event.inputs.service }}
+      ESTIMATED_DURATION: ${{ github.event.inputs.duration }}
+      REF: ${{ github.event.inputs.ref }}
+      OVERRIDE_SERVICE: ${{ github.event.inputs.override }}
+      ENV: ${{ github.event.inputs.env }}
+
+    steps:
+      - name: Set Region Variable
+        id: set-region
+        run: |
+          case "$ENV" in
+            dev-01) REGION="eu-central-1" ;;
+            dev-02) REGION="eu-west-1" ;;
+            dev-03) REGION="eu-west-3" ;;
+            qa-01) REGION="eu-south-1" ;;
+            *) echo "Invalid environment specified. Region variable not set." && exit 1 ;;
+          esac
+          echo "REGION=${REGION}" | tee -a $GITHUB_ENV
+
+      - name: Notify Slack About Deployment
+        uses: Ilshidur/action-slack@master
+        with:
+          args: |
+            <!here> ${{ github.actor }} is taking `${{ inputs.service }}` in `${{ inputs.env }}` (${{ env.REGION }}) for `${{ inputs.duration }}`
+
+      - name: Slack notification on success, failure, or cancellation
+        if: always()
+        uses: Ilshidur/action-slack@master
+        with:
+          args: |
+            Deployment of ${{ inputs.service }} (ref: ${{ inputs.ref }}) to the ${{ inputs.env }} env completed with status: `${{ job.status }}`
