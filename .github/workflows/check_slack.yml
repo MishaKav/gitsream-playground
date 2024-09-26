@@ -122,7 +122,7 @@ jobs:
           pip install -r linenv/requirements.txt
 
       - name: Check jq
-        run: jq -Rs '.' check_slack.yml | sed 's/\\n/\\n/g' | sed 's/\\/\\\\/g'
+        run: jq -Rs '.' .github/workflows/check_slack.yml | sed 's/\\n/\\n/g' | sed 's/\\/\\\\/g'
 
       # - name: Set Region Variable
       #   id: set-region
