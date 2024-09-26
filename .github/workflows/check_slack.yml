@@ -110,14 +110,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
+        id: python-cache
         with:
           python-version: 3.8
           cache: 'pip'
 
       - name: install dependencies
+        if: steps.python-cache.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get update
-          sudo apt-get install awscli jq
+          sudo apt-get install awscli
           pip install -r requirements.txt
           pip install -r deploy/requirements.txt
           pip install -r linenv/requirements.txt
