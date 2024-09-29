@@ -118,10 +118,13 @@ jobs:
       - name: install dependencies
         if: steps.python-cache.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get install awscli
           pip install -r requirements.txt
           pip install -r deploy/requirements.txt
           pip install -r linenv/requirements.txt
+
+      - name: Check Boto3 Version
+        run: |
+          python check_boto3_version.py
 
       # - name: Set Region Variable
       #   id: set-region
