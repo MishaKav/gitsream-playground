@@ -110,13 +110,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        id: python-cache
         with:
           python-version: 3.8
-          cache: 'pip'
+
+      - name: PIP Cache
+        id: pip-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: install dependencies
-        # if: steps.python-cache.outputs.cache-hit != 'true'
+        if: steps.pip-cache.outputs.cache-hit != 'true'
         run: |
           pip install -r requirements.txt
           pip install -r deploy/requirements.txt
