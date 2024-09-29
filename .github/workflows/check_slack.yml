@@ -1,10 +1,10 @@
 name: Deploy To Dev
-run-name: Deploy `${{ inputs.service }}` in `${{ inputs.env }}` for `${{ inputs.duration }}`
+run-name: Sync `${{ inputs.env || 'DEV' }}` with PROD
 
 on:
-  push:
-    branches:
-      - check-cache-for-python
+  # when changing this, also change the `if` condition in the 1-3 steps below (L48 - L58)
+  schedule:
+    - cron: '*/15 * * * *' # dev-01 - every 15 minutes
   workflow_dispatch:
     inputs:
       env:
@@ -108,6 +108,10 @@ jobs:
       ENV: ${{ inputs.env }}
 
     steps:
+      - name: Set dev-01 variable for Sunday sync
+        if: github.event.schedule == '*/15 * * * *'
+        run: echo "ENV=dev-01" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -132,27 +136,20 @@ jobs:
         run: |
           python check_boto3_version.py
 
-      # - name: Set Region Variable
-      #   id: set-region
-      #   run: |
-      #     case "$ENV" in
-      #       dev-01) REGION="eu-central-1" ;;
-      #       dev-02) REGION="eu-west-1" ;;
-      #       dev-03) REGION="eu-west-3" ;;
-      #       qa-01) REGION="eu-south-1" ;;
-      #       *) echo "Invalid environment specified. Region variable not set." && exit 1 ;;
-      #     esac
-      #     echo "REGION=${REGION}" | tee -a $GITHUB_ENV
+      - name: Set Region Variable
+        id: set-region
+        run: |
+          case "$ENV" in
+            dev-01) REGION="eu-central-1" ;;
+            dev-02) REGION="eu-west-1" ;;
+            dev-03) REGION="eu-west-3" ;;
+            qa-01) REGION="eu-south-1" ;;
+            *) echo "Invalid environment specified. Region variable not set." && exit 1 ;;
+          esac
+          echo "REGION=${REGION}" | tee -a $GITHUB_ENV
 
-      # - name: Notify Slack About Deployment
-      #   uses: Ilshidur/action-slack@master
-      #   with:
-      #     args: |
-      #       <!here> ${{ github.actor }} is taking `${{ inputs.service }}` in `${{ inputs.env }}` (_${{ env.REGION }}_) for `${{ inputs.duration }}`
-
-      # - name: Slack notification on success, failure, or cancellation
-      #   if: always()
-      #   uses: Ilshidur/action-slack@master
-      #   with:
-      #     args: |
-      #       Deployment of *${{ inputs.service }}* (ref: _${{ inputs.ref }}_) to ${{ inputs.env }} completed with status: `${{ job.status }}`
+      - name: Notify Slack About Deployment
+        uses: Ilshidur/action-slack@master
+        with:
+          args: |
+            <!here> ${{ github.actor }} is taking `${{ inputs.service }}` in `${{ env.ENV }}` (_${{ env.REGION }}_) for `${{ inputs.duration }}`
