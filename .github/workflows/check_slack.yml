@@ -116,7 +116,7 @@ jobs:
           cache: 'pip'
 
       - name: install dependencies
-        if: steps.python-cache.outputs.cache-hit != 'true'
+        # if: steps.python-cache.outputs.cache-hit != 'true'
         run: |
           pip install -r requirements.txt
           pip install -r deploy/requirements.txt
