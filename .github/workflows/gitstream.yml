@@ -37,7 +37,7 @@ jobs:
     name: gitStream workflow automation
     steps:
       - name: Evaluate Rules
-        uses: linear-b/gitstream-github-action@v2
+        uses: linear-b/gitstream-github-action@v1.0.17
         env:
           LINEARB_TOKEN: ${{ secrets.LINEARB_TOKEN }}
           ENABLE_DEBUG_ARTIFACTS: true
@@ -49,4 +49,4 @@ jobs:
           installation_id: ${{ github.event.inputs.installation_id }}
           resolver_url: ${{ github.event.inputs.resolver_url }}
           resolver_token: ${{ github.event.inputs.resolver_token }}
-          debug_mode: 'true'
+          debug_mode: 'false'
