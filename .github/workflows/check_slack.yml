@@ -2,6 +2,10 @@ name: Deploy To Dev
 run-name: Sync `${{ inputs.env || 'DEV' }}` with PROD
 
 on:
+  # when changing this, also change the `if` condition in the 1-3 steps below (L48 - L58)
+  schedule:
+    - cron: '*/15 * * * *' # dev-01 - every 15 minutes
+    - cron: '*/20 * * * *' # dev-02 - every 20 minutes
   workflow_dispatch:
     inputs:
       env:
@@ -105,6 +109,14 @@ jobs:
       ENV: ${{ inputs.env }}
 
     steps:
+      - name: Set dev-01 variable for Sunday sync
+        if: github.event.schedule == '*/15 * * * *'
+        run: echo "ENV=dev-01" >> $GITHUB_ENV
+
+      - name: Set dev-01 variable for Sunday sync
+        if: github.event.schedule == '*/20 * * * *'
+        run: echo "ENV=dev-02" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
