@@ -1,7 +1,10 @@
 name: Deploy To Dev
-run-name: Deploy `${{ inputs.service }}` in `${{ inputs.env }}` for `${{ inputs.duration }}`
+run-name: Sync `${{ inputs.env || 'DEV' }}` with PROD
 
 on:
+  # when changing this, also change the `if` condition in the 1-3 steps below (L48 - L58)
+  schedule:
+    - cron: '*/15 * * * *' # dev-01 - every 15 minutes
   workflow_dispatch:
     inputs:
       env:
@@ -78,14 +81,14 @@ on:
         required: true
 
 concurrency:
-  group: deploy-${{ github.event.inputs.env }}-${{ github.event.inputs.service }}
+  group: deploy-${{ inputs.env }}-${{ inputs.service }}
 
 env:
-  ENV: ${{ github.event.inputs.env }}
+  ENV: ${{ inputs.env }}
 
 jobs:
   deploy:
-    name: '${{ github.event.inputs.env }} Deployment'
+    name: '${{ inputs.env }} Deployment'
     runs-on: ubuntu-latest
     env:
       ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
@@ -98,13 +101,41 @@ jobs:
       KUBECTL_VERSION: v1.30.0
       HELM_VERSION: v3.14.4
       GH_ACTOR: ${{ github.actor }}
-      SERVICE_NAME: ${{ github.event.inputs.service }}
-      ESTIMATED_DURATION: ${{ github.event.inputs.duration }}
-      REF: ${{ github.event.inputs.ref }}
-      OVERRIDE_SERVICE: ${{ github.event.inputs.override }}
-      ENV: ${{ github.event.inputs.env }}
+      SERVICE_NAME: ${{ inputs.service }}
+      ESTIMATED_DURATION: ${{ inputs.duration }}
+      REF: ${{ inputs.ref }}
+      OVERRIDE_SERVICE: ${{ inputs.override }}
+      ENV: ${{ inputs.env }}
 
     steps:
+      - name: Set dev-01 variable for Sunday sync
+        if: github.event.schedule == '*/15 * * * *'
+        run: echo "ENV=dev-01" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.8
+
+      - name: PIP Cache
+        id: pip-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: install dependencies
+        if: steps.pip-cache.outputs.cache-hit != 'true'
+        run: |
+          pip install -r requirements.txt
+          pip install -r deploy/requirements.txt
+          pip install -r linenv/requirements.txt
+
+      - name: Check Boto3 Version
+        run: |
+          python check_boto3_version.py
+
       - name: Set Region Variable
         id: set-region
         run: |
@@ -121,11 +152,4 @@ jobs:
         uses: Ilshidur/action-slack@master
         with:
           args: |
-            <!here> ${{ github.actor }} is taking `${{ inputs.service }}` in `${{ inputs.env }}` (_${{ env.REGION }}_) for `${{ inputs.duration }}`
-
-      - name: Slack notification on success, failure, or cancellation
-        if: always()
-        uses: Ilshidur/action-slack@master
-        with:
-          args: |
-            Deployment of *${{ inputs.service }}* (ref: _${{ inputs.ref }}_) to ${{ inputs.env }} completed with status: `${{ job.status }}`
+            <!here> ${{ github.actor }} is taking `${{ inputs.service }}` in `${{ env.ENV }}` (_${{ env.REGION }}_) for `${{ inputs.duration }}`
