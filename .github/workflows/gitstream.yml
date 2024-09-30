@@ -37,7 +37,7 @@ jobs:
     name: gitStream workflow automation
     steps:
       - name: Evaluate Rules
-        uses: linear-b/gitstream-github-action@v1.0.17
+        uses: linear-b/gitstream-github-action@v2
         env:
           LINEARB_TOKEN: ${{ secrets.LINEARB_TOKEN }}
           ENABLE_DEBUG_ARTIFACTS: true
