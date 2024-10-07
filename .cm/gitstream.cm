@@ -1,5 +1,3 @@
-# -*- mode: yaml -*-
-
 manifest:
   version: 1.0
 
@@ -11,47 +9,6 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-            {{ repo | testingRequest() }}
-
-  # estimated_time_to_review:
-  #   if:
-  #     - true
-  #   run:
-  #     - action: add-label@v1
-  #       args:
-  #         label: "{{ calc.etr }} min review"
-  #         color: {{ colors.red if (calc.etr >= 20) else ( colors.yellow if (calc.etr >= 5) else colors.green ) }}
-
-  safe_changes:
-    if:
-      - {{ is.formatting or is.docs or is.tests or is.image }}
-    run: 
-      - action: approve@v1
-      - action: add-comment@v1
-        args:
-          comment: |
-            This PR is considered a safe change and has been automatically approved.
-
-calc:
-  etr: {{ branch | estimatedReviewTime }}
-
-has:
-  jira_ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
-  jira_ticket_in_desc: {{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}
-  deleted_files: {{ source.diff.files | map(attr='new_file') | match(term='/dev/null') | some }}
-
-
-# These are all of the colors in GitHub's default label color palette.
-colors:
-  red: 'b60205'
-  orange: 'd93f0b'
-  yellow: 'fbca04'
-  green: '0e8a16'
-  blue: '1d76db'
-  purple: '5319e7'
-
-is:
-  formatting: {{ source.diff.files | isFormattingChange }}
-  docs: {{ files | allDocs }}
-  tests: {{ files | allTests }}
-  image: {{ files | allImages }}
+            {% if pr.labels | includes(term="askai") %}
+              {{ repo | testingRequest() }}
+            {% endif %}
