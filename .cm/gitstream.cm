@@ -2,13 +2,11 @@ manifest:
   version: 1.0
 
 automations:
-  ask_ai:
-    if:
-      - {{ pr.labels | includes(term="askai") }}
-    run:
-      - action: add-comment@v1
-        args:
-          comment: |
-            {% if pr.labels | includes(term="askai") %}
-              {{ repo | testingRequest() }}
-            {% endif %}
+ask_ai:
+  if:
+    - {{ pr.labels | includes(term="askai") }}
+  run:
+    - action: add-comment@v1
+      args:
+        comment: |
+          {{ repo | testingRequest() if pr.labels | includes(term="askai")}}
