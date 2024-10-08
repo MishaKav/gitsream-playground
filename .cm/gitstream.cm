@@ -9,4 +9,4 @@ ask_ai:
     - action: add-comment@v1
       args:
         comment: |
-          {{ repo | testingRequest() if pr.labels | includes(term="askai") }}
+          {{ repo | testingRequest() }}
