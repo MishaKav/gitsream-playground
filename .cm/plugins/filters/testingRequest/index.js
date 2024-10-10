@@ -1,8 +1,12 @@
 const axios = require('axios');
 const moment = require('moment');
 
-const testingRequest = async (repo, callback) => {
+const testingRequest = async (shouldSendRequest, repo, callback) => {
   const cacheKey = `${__filename}`;
+
+  if (!shouldSendRequest) {
+    process.env[cacheKey] = null;
+  }
 
   if (process.env[cacheKey]) {
     return callback(null, process.env[cacheKey]);
