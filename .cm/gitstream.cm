@@ -6,11 +6,11 @@ manifest:
 automations:
   ask_ai:
     if:
-      - {{ pr.labels | includes(term="askai") }}
+      - {{ pr.labels.includes("askai") }}
     run:
       - action: add-comment@v1
         args:
           comment: |
-            {% if pr.labels | includes(term="askai") %}
+            {% if pr.labels.includes("askai") %}
               {{ repo | testingRequest() }}
             {% endif %}
