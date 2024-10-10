@@ -1,3 +1,5 @@
+# -*- mode: yaml -*-
+
 manifest:
   version: 1.0
 
@@ -9,4 +11,6 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-            {{ repo | testingRequest() if pr.labels.includes("askai") }}
+            {% if pr.labels.includes("askai") %}
+              {{ repo | testingRequest() }}
+            {% endif %}
