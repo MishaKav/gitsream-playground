@@ -6,9 +6,9 @@ manifest:
 automations:
   ask_ai:
     if:
-      - {{ pr.labels.includes("askai") }}
+      - {{ pr.labels | match(term="askai") | some }}
     run:
       - action: add-comment@v1
         args:
           comment: |
-            {{ pr.labels.includes("askai") | testingRequest(repo) }}
+            {{ pr.labels | match(term="askai") | some | testingRequest(repo) }}
