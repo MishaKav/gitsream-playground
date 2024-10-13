@@ -11,4 +11,4 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-            {{ pr.labels.includes("askai") and true | testingRequest(repo) }}
+            {{ pr.labels.includes("askai")| testingRequest(repo) }}
