@@ -4,11 +4,20 @@ manifest:
   version: 1.0
 
 automations:
-  ask_ai:
+  pr_approved:
     if:
-      - {{ pr.labels.includes("askai") }}
+      - true
     run:
       - action: add-comment@v1
         args:
           comment: |
-            {{ pr.labels.includes("askai")| testingRequest(repo) }}
+            Hello true {{ "" | getTimestamp() }}
+
+  pr_approved_2:
+    if:
+      - false
+    run:
+      - action: add-comment@v1
+        args:
+          comment: |
+            Hello false {{ "" | getTimestamp() }}

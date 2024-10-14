@@ -1,0 +1,14 @@
+# -*- mode: yaml -*-
+
+manifest:
+  version: 1.0
+
+automations:
+  ask_ai:
+    if:
+      - {{ pr.labels.includes("askai") }}
+    run:
+      - action: add-comment@v1
+        args:
+          comment: |
+            {{ pr.labels.includes("askai")| testingRequest(repo) }}
