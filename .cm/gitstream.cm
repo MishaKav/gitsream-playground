@@ -6,7 +6,7 @@ manifest:
 automations:
   pr_approved:
     if:
-      - true
+      - {{ source.diff.files | match(attr='new_file', term='serverless.yml') | some }}
     run:
       - action: add-comment@v1
         args:
