@@ -4,11 +4,20 @@ manifest:
   version: 1.0
 
 automations:
-  ask_ai:
+  pr_approved:
     if:
-      - {{ pr.labels | match(term="askai") | some }}
+      - {{ source.diff.files | match(attr='new_file', term='serverless.yml') | some }}
     run:
       - action: add-comment@v1
         args:
           comment: |
-            {{ pr.labels | match(term="askai") | some | testingRequest(repo) }}
+            Hello true {{ "" | getTimestamp() }}
+
+  pr_approved_2:
+    if:
+      - false
+    run:
+      - action: add-comment@v1
+        args:
+          comment: |
+            Hello false {{ "" | getTimestamp() }}
