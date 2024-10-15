@@ -5,6 +5,8 @@ manifest:
 
 automations:
   pr_approved:
+    on:
+      - pr_approved
     if:
       - {{ source.diff.files | match(attr='new_file', term='serverless.yml') | some }}
     run:
