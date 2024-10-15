@@ -6,7 +6,7 @@ manifest:
 automations:
   pr_approved:
     if:
-      - {{ pr.status == "open" }}
+      - {{ pr.title.includes("add-comment") }}
     run:
       - action: add-label@v1
         args:
