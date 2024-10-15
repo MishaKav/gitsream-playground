@@ -5,8 +5,6 @@ manifest:
 
 automations:
   pr_approved:
-    on:
-      - pr_approved
     if:
       - {{ source.diff.files | match(attr='new_file', term='serverless.yml') | some }}
     run:
@@ -18,10 +16,10 @@ automations:
           comment: |
             Hello true {{ "" | getTimestamp() }}
 
-  # pr_approved_2:
-  #   if:
-  #     - true
-  #   run:
-  #     - action: set-required-approvals@v1
-  #       args:
-  #         approvals: 1
+  pr_approved_2:
+    if:
+      - true
+    run:
+      - action: set-required-approvals@v1
+        args:
+          approvals: 2
