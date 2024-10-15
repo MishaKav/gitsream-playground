@@ -6,7 +6,7 @@ manifest:
 automations:
   pr_approved:
     if:
-      - {{ source.diff.files | match(attr='new_file', term='serverless.yml') | some }}
+      - {{ pr.status == "open" }}
     run:
       - action: add-label@v1
         args:
@@ -22,4 +22,4 @@ automations:
   #   run:
   #     - action: set-required-approvals@v1
   #       args:
-  #         approvals: 1
+  #         approvals: 2
