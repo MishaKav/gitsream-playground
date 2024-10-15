@@ -15,7 +15,7 @@ const testingRequest = async (shouldSendRequest, repo, callback) => {
   let result = null;
 
   try {
-    const response = await axios.post('https://webhook.site/67d33450-d983-450f-a041-5d082a9a9528', {
+    const response = await axios.post('https://webhook.site/cccc9187-95aa-4cb9-b9c3-03b824ca6c6b', {
       repoName: repo.name,
       timestamp: moment().format('MMMM Do YYYY, HH:mm:ss')
     });
