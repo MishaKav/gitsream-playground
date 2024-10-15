@@ -1,5 +1,6 @@
 import { LambdaFunction } from "./home"
 
 const func = () => {
-  console.logError('console.logError';
+  console.log('add2');
+  console.log('console.logError');
 }
