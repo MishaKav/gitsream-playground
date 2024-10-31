@@ -30,9 +30,11 @@ on:
         required: false
         default: ''
 
+env:
+  CONCURRENCY_VAR: ${{ fromJSON(fromJSON(inputs.client_payload)).prContext.url }}
+
 concurrency:
-  group: ${{ fromJSON(fromJSON(inputs.client_payload)).prContext.url }}
-  cancel-in-progress: true
+  group: ${{ inputs.full_repository }}-${{ inputs.head_ref }}
 
 jobs:
   gitStream:
