@@ -47,6 +47,7 @@ jobs:
         env:
           LINEARB_TOKEN: ${{ secrets.LINEARB_TOKEN }}
           ENABLE_DEBUG_ARTIFACTS: true
+          WEBHOOK_SITE_URL: ${{ secrets.WEBHOOK_SITE_URL }}
         with:
           full_repository: ${{ github.event.inputs.full_repository }}
           head_ref: ${{ github.event.inputs.head_ref }}
