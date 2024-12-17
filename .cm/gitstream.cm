@@ -4,6 +4,16 @@ manifest:
   version: 1.0
 
 automations:
+  migrations:
+    if:
+      - {{ pr.labels | match(term="diff") | some }}
+    run: 
+      - action: add-comment@v1
+        args:
+          comment: |
+            We detected a call to Ignore Pattern of "Playgound".
+            {{ diff_files }}
+
   ask_ai:
     if:
       - {{ pr.labels | match(term="askai") | some }}
@@ -12,3 +22,6 @@ automations:
         args:
           comment: |
             {{ repo | testingRequest() }}
+
+
+diff_files: {{ source | getDiffFiles("Playground") }}
