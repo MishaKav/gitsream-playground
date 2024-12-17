@@ -1,4 +1,4 @@
-module.exports = (source, keyword) => {
+const getDiffFiles = (source, keyword) => {
   const { files } = source.diff;
 
   const relevantFilesDiff = files.filter(file => file.diff.includes(keyword));
@@ -12,5 +12,7 @@ module.exports = (source, keyword) => {
     )
     .join('\n');
 
-  return result;
+  return JSON.stringify(result);
 };
+
+module.exports = getDiffFiles;
