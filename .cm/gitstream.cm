@@ -14,14 +14,4 @@ automations:
             We detected a call to Ignore Pattern of "Playgound".
             {{ diff_files }}
 
-  ask_ai:
-    if:
-      - {{ pr.labels | match(term="askai") | some }}
-    run:
-      - action: add-comment@v1
-        args:
-          comment: |
-            {{ repo | testingRequest() }}
-
-
 diff_files: {{ source | getDiffFiles("Playground") }}
