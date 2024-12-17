@@ -13,4 +13,4 @@ automations:
           comment: |
             We detected a call to Ignore Pattern of "Playgound".
 
-#diff_files: {{ source | getDiffFiles("Playground") }}
+
