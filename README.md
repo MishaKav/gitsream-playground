@@ -1,4 +1,4 @@
-# GitStream Playground:1 
+# GitStream Playground:
 
 A new repository was created for exploring and experimenting with the GitStream workflow.
 
