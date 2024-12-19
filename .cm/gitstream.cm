@@ -11,7 +11,14 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-            We detected a call to Ignore Pattern of "Playgound".
-            {{ diff_files }}
+            We detected a call to Ignore Linter.
+            Here are the lines:
+            {% for line in ignore_linter_lines %}
+            `{{ line.new_file }}`
+            ```diff
+              {{ line.diff | dump }}
+            ```
+            {% endfor %}
 
-diff_files: {{ source | getDiffFiles("Playground") }}
+ignore_linter_lines: {{ source.diff.files | filter(attr='diff', regex=r/\Playground/) | dump }}
+has_ignore_linter: {{ ignore_linter_lines | some }}
