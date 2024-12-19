@@ -13,12 +13,12 @@ automations:
           comment: |
             We detected a call to Ignore Linter.
             Here are the lines:
-            {% for line in ignore_linter_lines %}
-            `{{ line.new_file }}`
+            {% for file in ignore_linter_files %}
+            `{{ file.new_file }}`
             ```diff
-              {{ line.diff | dump }}
+              {{ file.diff.split("\n") | filter(regex=r/^[+-]/) | join("\n") | dump }}
             ```
             {% endfor %}
 
-ignore_linter_lines: {{ source.diff.files | filter(attr='diff', regex=r/\Playground/) | dump }}
-has_ignore_linter: {{ ignore_linter_lines | some }}
+ignore_linter_files: {{ source.diff.files | filter(attr='diff', regex=r/\Playground/) | dump }}
+has_ignore_linter: {{ ignore_linter_files | some }}
