@@ -4,11 +4,21 @@ manifest:
   version: 1.0
 
 automations:
-  ask_ai:
+  migrations:
     if:
-      - {{ pr.labels | match(term="askai") | some }}
-    run:
+      - {{ pr.labels | match(term="diff") | some }}
+    run: 
       - action: add-comment@v1
         args:
           comment: |
-            {{ repo | testingRequest() }}
+            We detected a call to Ignore Linter.
+            Here are the lines:
+            {% for file in ignore_linter_files %}
+            `{{ file.new_file }}`
+            ```diff
+              {{ file.diff.split("\n") | filter(regex=r/^[+-]/) | join("\n") | dump }}
+            ```
+            {% endfor %}
+
+ignore_linter_files: {{ source.diff.files | filter(attr='diff', regex=r/\Playground/) | dump }}
+has_ignore_linter: {{ ignore_linter_files | some }}
